@@ -5,8 +5,9 @@ import { useParams } from "react-router";
 import type { FileItem } from "@/components/FileCard";
 import { FileSection } from "@/components/FileSection";
 
+const API_URL = import.meta.env.VITE_API_URL || `http://${window.location.hostname || "localhost"}:3000`;
+
 function Room() {
-  const API_URL = `http://${window.location.hostname || "localhost"}:3000`;
   const { roomId } = useParams<{ roomId: string }>();
   const [recentFiles, setRecentFiles] = useState<FileItem[]>([]);
   const [allFiles, setAllFiles] = useState<FileItem[]>([]);
