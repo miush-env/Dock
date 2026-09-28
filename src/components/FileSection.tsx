@@ -16,45 +16,42 @@ export function FileSection({
   isLoadingAll = false,
 }: FileSectionProps) {
   return (
-    <div className="w-full max-w-5xl flex flex-col gap-10 mt-6 px-4">
+    <div className="w-full max-w-4xl flex flex-col gap-8 mt-4">
       {/* SECCIÓN 1: Archivos recién enviados */}
-      <section className="bg-white/80 backdrop-blur-sm border border-blue-100 rounded-2xl p-6 shadow-sm">
-        <div className="flex items-center gap-2 mb-4 border-b border-gray-100 pb-3">
-          <Clock className="w-5 h-5 text-blue-600" />
-          <h2 className="text-lg font-bold text-gray-800">
-            Archivos recién enviados (Vista previa)
+      <section className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xs">
+        <div className="flex items-center gap-2 mb-4 border-b border-slate-100 dark:border-slate-800/80 pb-3">
+          <Clock className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+          <h2 className="text-sm font-bold uppercase tracking-wider text-slate-900 dark:text-slate-100">
+            Archivos recién subidos
           </h2>
-          <span className="text-xs bg-blue-100 text-blue-800 font-medium px-2 py-0.5 rounded-full ml-auto">
+          <span className="text-[11px] bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 font-semibold px-2 py-0.5 rounded-full ml-auto">
             {recentFiles.length} {recentFiles.length === 1 ? "archivo" : "archivos"}
           </span>
         </div>
 
         {recentFiles.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-10 text-gray-400 border-2 border-dashed border-gray-200 rounded-xl">
-            <ImageIcon className="w-10 h-10 mb-2 opacity-50 text-blue-400" />
-            <p className="text-sm font-medium">Aún no has subido archivos en esta sesión</p>
-            <p className="text-xs text-gray-400 mt-1">
-              Envía archivos usando el formulario para previsualizarlos aquí.
-            </p>
+          <div className="flex flex-col items-center justify-center py-8 text-slate-400 dark:text-slate-500 border border-dashed border-slate-200 dark:border-slate-800 rounded-xl">
+            <ImageIcon className="w-8 h-8 mb-1.5 opacity-40 text-purple-500" />
+            <p className="text-xs font-medium">Aún no has subido archivos en esta sesión</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4">
             {recentFiles.map((file, index) => (
-              <FileCard key={`${file.name}-${index}`} file={file} badge="Recién enviado" />
+              <FileCard key={`${file.name}-${index}`} file={file} badge="Reciente" />
             ))}
           </div>
         )}
       </section>
 
-      {/* SECCIÓN 2: Todos los archivos recibidos */}
-      <section className="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl p-6 shadow-sm">
-        <div className="flex items-center justify-between gap-2 mb-4 border-b border-gray-100 pb-3">
+      {/* SECCIÓN 2: Todos los archivos de la sala */}
+      <section className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xs">
+        <div className="flex items-center justify-between gap-2 mb-4 border-b border-slate-100 dark:border-slate-800/80 pb-3">
           <div className="flex items-center gap-2">
-            <FolderOpen className="w-5 h-5 text-blue-600" />
-            <h2 className="text-lg font-bold text-gray-800">
-              Todos los archivos recibidos
+            <FolderOpen className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+            <h2 className="text-sm font-bold uppercase tracking-wider text-slate-900 dark:text-slate-100">
+              Archivos en la sala
             </h2>
-            <span className="text-xs bg-gray-100 text-gray-700 font-medium px-2 py-0.5 rounded-full">
+            <span className="text-[11px] bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold px-2 py-0.5 rounded-full">
               {allFiles.length}
             </span>
           </div>
@@ -65,23 +62,20 @@ export function FileSection({
             size="sm"
             onClick={onRefresh}
             disabled={isLoadingAll}
-            className="flex items-center gap-1.5 cursor-pointer hover:bg-gray-100"
+            className="flex items-center gap-1.5 cursor-pointer text-xs h-8 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${isLoadingAll ? "animate-spin" : ""}`} />
+            <RefreshCw className={`w-3 h-3 ${isLoadingAll ? "animate-spin" : ""}`} />
             <span>Actualizar</span>
           </Button>
         </div>
 
         {allFiles.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-10 text-gray-400 border-2 border-dashed border-gray-200 rounded-xl">
-            <FolderOpen className="w-10 h-10 mb-2 opacity-40 text-gray-400" />
-            <p className="text-sm font-medium">No hay archivos en el servidor</p>
-            <p className="text-xs text-gray-400 mt-1">
-              Los archivos que se almacenen en el servidor aparecerán en esta sección.
-            </p>
+          <div className="flex flex-col items-center justify-center py-8 text-slate-400 dark:text-slate-500 border border-dashed border-slate-200 dark:border-slate-800 rounded-xl">
+            <FolderOpen className="w-8 h-8 mb-1.5 opacity-40 text-slate-400" />
+            <p className="text-xs font-medium">No hay archivos en esta sala aún</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4">
             {allFiles.map((file, index) => (
               <FileCard key={`${file.name}-${index}`} file={file} />
             ))}
