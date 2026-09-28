@@ -1,10 +1,10 @@
-import { ExternalLink, FileText, Image as ImageIcon } from "lucide-react";
+import { ExternalLink, FileText } from "lucide-react";
 
 export interface FileItem {
   name: string;
   url: string;
-  size: number;
-  owner: string;
+  size?: number;
+  owner?: string;
   isImage?: boolean;
 }
 
@@ -24,7 +24,6 @@ export function FileCard({ file, badge }: FileCardProps) {
 
       {/* Vista previa / icono */}
       <div className="relative w-full h-36 bg-gray-100 flex items-center justify-center overflow-hidden">
-        <span className="text-gray-400 text-sm">{file.owner}</span>
         {file.isImage ? (
           <img
             src={file.url}

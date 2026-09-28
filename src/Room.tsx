@@ -27,30 +27,29 @@ function Room() {
   }, [roomId]);
 
   // Función para obtener todos los archivos recibidos desde Cloudflare R2 a través del backend
+  async function viewFiles() {
+    if (!roomId) return;
+
+    try {
+      setIsLoadingFiles(true);
+      const res = await fetch(`${API_URL}/${roomId}`);
+      const data: FileItem[] = await res.json();
+      setAllFiles(data);
+    } catch (err) {
+      console.error("Error al cargar archivos:", err);
+    } finally {
+      setIsLoadingFiles(false);
+    }
+  }
 
   useEffect(() => {
-    async function viewFiles() {
-      if (!roomId) return;
-
-      try {
-        setIsLoadingFiles(true);
-
-        const res = await fetch(`${API_URL}/${roomId}`);
-        const data: FileItem[] = await res.json();
-        setAllFiles(data);
-      } catch (err) {
-        console.error("Error al cargar archivos:", err);
-      } finally {
-        setIsLoadingFiles(false);
-      }
-    }
-
     viewFiles();
-    console.log(allFiles)
   }, [roomId]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!roomId) return;
+
     const form = e.currentTarget;
     const formData = new FormData(form);
     formData.append("roomId", roomId);
@@ -74,6 +73,7 @@ function Room() {
         setRecentFiles(message.files);
       }
 
+      await viewFiles();
       form.reset();
     } catch (err) {
       console.error("Error al enviar archivos:", err);
@@ -159,7 +159,12 @@ function Room() {
         </button>
       </form>
 
-      <FileSection recentFiles={recentFiles} allFiles={allFiles} />
+      <FileSection
+        recentFiles={recentFiles}
+        allFiles={allFiles}
+        onRefresh={viewFiles}
+        isLoadingAll={isLoadingFiles}
+      />
     </div>
   );
 }
