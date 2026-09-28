@@ -7,6 +7,9 @@ interface FileSectionProps {
   allFiles?: FileItem[];
   onRefresh?: () => void;
   isLoadingAll?: boolean;
+  roomId?: string;
+  onFileDeleted?: (fileName: string) => void;
+  onFileRenamed?: (oldName: string, newName: string) => void;
 }
 
 export function FileSection({
@@ -14,34 +17,39 @@ export function FileSection({
   allFiles = [],
   onRefresh,
   isLoadingAll = false,
+  roomId,
+  onFileDeleted,
+  onFileRenamed,
 }: FileSectionProps) {
   return (
     <div className="w-full max-w-4xl flex flex-col gap-8 mt-4">
       {/* SECCIÓN 1: Archivos recién enviados */}
-      <section className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xs">
-        <div className="flex items-center gap-2 mb-4 border-b border-slate-100 dark:border-slate-800/80 pb-3">
-          <Clock className="w-4 h-4 text-purple-600 dark:text-purple-400" />
-          <h2 className="text-sm font-bold uppercase tracking-wider text-slate-900 dark:text-slate-100">
-            Archivos recién subidos
-          </h2>
-          <span className="text-[11px] bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 font-semibold px-2 py-0.5 rounded-full ml-auto">
-            {recentFiles.length} {recentFiles.length === 1 ? "archivo" : "archivos"}
-          </span>
-        </div>
-
-        {recentFiles.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-8 text-slate-400 dark:text-slate-500 border border-dashed border-slate-200 dark:border-slate-800 rounded-xl">
-            <ImageIcon className="w-8 h-8 mb-1.5 opacity-40 text-purple-500" />
-            <p className="text-xs font-medium">Aún no has subido archivos en esta sesión</p>
+      {recentFiles.length > 0 && (
+        <section className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xs">
+          <div className="flex items-center gap-2 mb-4 border-b border-slate-100 dark:border-slate-800/80 pb-3">
+            <Clock className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+            <h2 className="text-sm font-bold uppercase tracking-wider text-slate-900 dark:text-slate-100">
+              Archivos recién subidos
+            </h2>
+            <span className="text-[11px] bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 font-semibold px-2 py-0.5 rounded-full ml-auto">
+              {recentFiles.length} {recentFiles.length === 1 ? "archivo" : "archivos"}
+            </span>
           </div>
-        ) : (
+
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4">
             {recentFiles.map((file, index) => (
-              <FileCard key={`${file.name}-${index}`} file={file} badge="Reciente" />
+              <FileCard
+                key={`recent-${file.name}-${index}`}
+                file={file}
+                badge="Reciente"
+                roomId={roomId}
+                onDeleted={onFileDeleted}
+                onRenamed={onFileRenamed}
+              />
             ))}
           </div>
-        )}
-      </section>
+        </section>
+      )}
 
       {/* SECCIÓN 2: Todos los archivos de la sala */}
       <section className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xs">
@@ -71,13 +79,19 @@ export function FileSection({
 
         {allFiles.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-8 text-slate-400 dark:text-slate-500 border border-dashed border-slate-200 dark:border-slate-800 rounded-xl">
-            <FolderOpen className="w-8 h-8 mb-1.5 opacity-40 text-slate-400" />
+            <ImageIcon className="w-8 h-8 mb-1.5 opacity-40 text-slate-400" />
             <p className="text-xs font-medium">No hay archivos en esta sala aún</p>
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4">
             {allFiles.map((file, index) => (
-              <FileCard key={`${file.name}-${index}`} file={file} />
+              <FileCard
+                key={`all-${file.name}-${index}`}
+                file={file}
+                roomId={roomId}
+                onDeleted={onFileDeleted}
+                onRenamed={onFileRenamed}
+              />
             ))}
           </div>
         )}

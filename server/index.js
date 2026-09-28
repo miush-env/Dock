@@ -6,6 +6,7 @@ import { initSocket } from "./config/socket.js";
 const app = express();
 
 app.use(cors());
+app.use(express.json());
 
 app.get("/", (req, res) => {
   res.send("Server running with Cloudflare R2 storage");

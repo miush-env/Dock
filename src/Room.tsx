@@ -81,6 +81,19 @@ function Room() {
     }
   };
 
+  const handleFileDeleted = (deletedName: string) => {
+    setAllFiles((prev) => prev.filter((f) => f.name !== deletedName));
+    setRecentFiles((prev) => prev.filter((f) => f.name !== deletedName));
+  };
+
+  const handleFileRenamed = (oldName: string, newName: string) => {
+    const updateList = (files: FileItem[]) =>
+      files.map((f) => (f.name === oldName ? { ...f, name: newName } : f));
+    setAllFiles(updateList);
+    setRecentFiles(updateList);
+    viewFiles();
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-[#0b0f17] flex flex-col items-center transition-colors duration-200">
       <Header />
@@ -203,6 +216,9 @@ function Room() {
           allFiles={allFiles}
           onRefresh={viewFiles}
           isLoadingAll={isLoadingFiles}
+          roomId={roomId}
+          onFileDeleted={handleFileDeleted}
+          onFileRenamed={handleFileRenamed}
         />
       </main>
     </div>
