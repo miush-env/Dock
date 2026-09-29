@@ -9,14 +9,14 @@ const API_URL =
   `http://${window.location.hostname || "localhost"}:3000`;
 
 interface FormCodeOTPProps {
-  onInputFocus?: () => void;
-  onInputBlur?: () => void;
+  onInputActive?: () => void;
+  onInputIdle?: () => void;
   onSubmitStart?: () => void;
 }
 
 export default function FormCodeOTP({
-  onInputFocus,
-  onInputBlur,
+  onInputActive,
+  onInputIdle,
   onSubmitStart,
 }: FormCodeOTPProps) {
   const [digits, setDigits] = useState<string[]>(["", "", "", ""]);
@@ -32,6 +32,7 @@ export default function FormCodeOTP({
   }, []);
 
   const handleDigitChange = (index: number, value: string) => {
+    onInputActive?.();
     const sanitized = value.slice(-1).toUpperCase();
     const updated = [...digits];
     updated[index] = sanitized;
@@ -46,6 +47,7 @@ export default function FormCodeOTP({
     index: number,
     e: React.KeyboardEvent<HTMLInputElement>,
   ) => {
+    onInputActive?.();
     if (e.key === "Backspace" && !digits[index] && index > 0) {
       inputRefs.current[index - 1]?.focus();
     }
@@ -53,6 +55,7 @@ export default function FormCodeOTP({
 
   const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
     e.preventDefault();
+    onInputActive?.();
     const pasted = e.clipboardData
       .getData("text")
       .trim()
@@ -75,10 +78,10 @@ export default function FormCodeOTP({
     const code = digits.join("");
     if (code.length === 4) {
       onSubmitStart?.();
-      // Pequeño retardo para que se aprecie la mirada hacia arriba antes de navegar
+      // Retardo para congelar mirando la URL y luego navegar
       setTimeout(() => {
         navigate(`/room/${code}`);
-      }, 500);
+      }, 1200);
     }
   };
 
@@ -103,8 +106,18 @@ export default function FormCodeOTP({
               autoComplete="one-time-code"
               maxLength={1}
               value={digit}
-              onFocus={onInputFocus}
-              onBlur={onInputBlur}
+              onFocus={onInputActive}
+              onBlur={() => {
+                // Si ninguna casilla está enfocada, vuelve a estar idle
+                setTimeout(() => {
+                  const anyFocused = inputRefs.current.some(
+                    (el) => el === document.activeElement,
+                  );
+                  if (!anyFocused) {
+                    onInputIdle?.();
+                  }
+                }, 100);
+              }}
               onChange={(e) => handleDigitChange(index, e.target.value)}
               onKeyDown={(e) => handleKeyDown(index, e)}
               onPaste={handlePaste}
