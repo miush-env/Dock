@@ -1,14 +1,18 @@
 import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { Package, Sun, Moon } from "lucide-react";
+import { Show, SignInButton, SignUpButton, UserButton } from "@clerk/react";
 
 export default function Header() {
   const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("dock-theme");
-    const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const shouldBeDark = savedTheme === "dark" || (!savedTheme && systemPrefersDark);
+    const systemPrefersDark = window.matchMedia(
+      "(prefers-color-scheme: dark)",
+    ).matches;
+    const shouldBeDark =
+      savedTheme === "dark" || (!savedTheme && systemPrefersDark);
 
     if (shouldBeDark) {
       document.documentElement.classList.add("dark");
@@ -66,6 +70,13 @@ export default function Header() {
             </>
           )}
         </Button>
+        <Show when="signed-out">
+          <SignInButton />
+          <SignUpButton />
+        </Show>
+        <Show when="signed-in">
+          <UserButton />
+        </Show>
       </div>
     </header>
   );
