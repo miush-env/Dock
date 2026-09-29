@@ -10,10 +10,14 @@ interface DockAvatarProps {
 }
 
 /**
- * Componente interactivo para el avatar Onee de Dock.
- * - 'watching-text': Lee el texto descriptivo / bienvenida con animación activa y movimientos sutiles.
- * - 'watching-inputs': Cuando el usuario ingresa el código, transiciona a enfocar y se pausa con la mirada atenta y fija en los inputs.
- * - 'watching-url': Al presionar unirme a la sala, mira hacia arriba a la URL y se pausa mirando hacia arriba, para luego poder volver a leer el texto.
+ * Componente interactivo para el avatar Onee de Dock renderizado en tiempo real.
+ * Usa el motor vectorial procedural 3D con las expresiones nativas del proyecto de Avatar Studio:
+ * - 'watching-text': Lee el texto de bienvenida/instrucciones con micro-movimientos naturales y curiosidad ('curious').
+ * - 'watching-inputs': Cuando el usuario interactúa o ingresa el código, transiciona instantáneamente a
+ *   'inspecting-code' (cabeza agachada -22.5°, ojos bien abiertos de 76px y micro-sacadas oculares viendo las casillas)
+ *   y tras enfocar se pausa quedando fijo observando con atención el código escrito.
+ * - 'watching-url': Al presionar el botón de unirse a la sala, mira hacia arriba directamente a la URL
+ *   ('watching-url-bar' con cabeza levantada +18.5° y mirada vertical fija) y se pausa allí antes de navegar.
  */
 export default function DockAvatar({
   state = "watching-text",
@@ -32,31 +36,31 @@ export default function DockAvatar({
 
     switch (state) {
       case "watching-text": {
-        // Reproduce normalmente la animación mientras lee el texto
+        // Lee el texto descriptivo con movimiento natural
         setAnimation("curious");
         setPlaying(true);
         break;
       }
 
       case "watching-inputs": {
-        // Entra en la animación de sorpresa/atención (mirando abajo hacia los inputs)
-        // y tras un instante suave de transición se pausa quedando fijo observando el código
-        setAnimation("surprised");
+        // Transición fluida a inspeccionar los inputs con la cabeza inclinada hacia el código
+        setAnimation("inspecting-code");
         setPlaying(true);
+        // Pausa tras posicionar la mirada para quedar fijo observando el código
         pauseTimeoutRef.current = setTimeout(() => {
           setPlaying(false);
-        }, 550);
+        }, 400);
         break;
       }
 
       case "watching-url": {
-        // Mira arriba (proud / thinking con elevación hacia la barra de direcciones)
-        // y se congela mirando arriba antes de la navegación
-        setAnimation("proud");
+        // Eleva la cabeza e inclina la mirada exactamente hacia la barra de URL
+        setAnimation("watching-url-bar");
         setPlaying(true);
+        // Pausa mirando fijo la URL antes de la transición
         pauseTimeoutRef.current = setTimeout(() => {
           setPlaying(false);
-        }, 550);
+        }, 400);
         break;
       }
 
