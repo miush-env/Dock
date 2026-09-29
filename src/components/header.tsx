@@ -53,18 +53,16 @@ export default function Header() {
           type="button"
           onClick={toggleTheme}
           variant="outline"
-          size="sm"
-          className="border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-medium rounded-lg flex items-center gap-1.5 cursor-pointer text-xs"
+          size="lg"
+          className="border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-medium rounded-lg flex items-center gap-1.5 cursor-pointer text-xs"
         >
           {isDark ? (
             <>
               <Sun className="w-3.5 h-3.5 text-amber-500" />
-              <span>Claro</span>
             </>
           ) : (
             <>
               <Moon className="w-3.5 h-3.5 text-slate-600" />
-              <span>Oscuro</span>
             </>
           )}
         </Button>
