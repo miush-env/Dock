@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 260" width="100%" height="100%">
+  <defs>
+    <!-- Sombra sutil para la tarjeta frontal -->
+    <filter id="soft-shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#000000" flood-opacity="0.07" />
+    </filter>
+
+    <!-- Plantilla de tarjeta con líneas simuladas -->
+    <g id="card-template">
+      <rect width="112" height="150" rx="12" ry="12" fill="#FFFFFF" stroke="#E6E8EB" stroke-width="1.5" />
+      <rect x="14" y="38" width="84" height="6" rx="3" fill="#E2E5EB" />
+      <rect x="14" y="52" width="60" height="6" rx="3" fill="#E2E5EB" />
+      <rect x="14" y="66" width="72" height="6" rx="3" fill="#E2E5EB" />
+    </g>
+  </defs>
+
+  <g transform="translate(190, 135)">
+    <!-- Tarjeta izquierda: más abierta hacia afuera -->
+    <g transform="translate(-55, 22) rotate(-16) translate(-66, -75)">
+      <use href="#card-template" />
+    </g>
+
+    <!-- Tarjeta derecha: más abierta hacia afuera -->
+    <g transform="translate(55, 12) rotate(16) translate(-56, -75)">
+      <use href="#card-template" />
+    </g>
+
+    <!-- Tarjeta frontal centrada -->
+    <g transform="translate(-56, -75)" filter="url(#soft-shadow)">
+      <rect width="112" height="150" rx="12" ry="12" fill="#FFFFFF" stroke="#E6E8EB" stroke-width="1.5" />
+
+      <!-- Líneas superiores simuladas -->
+      <rect x="18" y="24" width="76" height="5" rx="2.5" fill="#E2E5EB" />
+      <rect x="18" y="36" width="52" height="5" rx="2.5" fill="#E2E5EB" />
+
+      <!-- Ícono "+" central -->
+      <path d="M56 68 V92 M44 80 H68" stroke="#8E95A2" stroke-width="2.5" stroke-linecap="round" />
+    </g>
+  </g>
+</svg>

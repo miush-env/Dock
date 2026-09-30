@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { Package, Sun, Moon } from "lucide-react";
+import { useParams } from "react-router";
 import { Show, SignInButton, SignUpButton, UserButton } from "@clerk/react";
 
 export default function Header() {
   const [isDark, setIsDark] = useState(false);
+  const { roomId } = useParams<{ roomId: string }>();
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("dock-theme");
@@ -51,6 +53,8 @@ export default function Header() {
           </span>
         </div>
       </a>
+
+      <span>{roomId}</span>
 
       <div className="flex items-center gap-3">
         <Button
