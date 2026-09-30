@@ -1,11 +1,62 @@
+import { useState } from "react";
 import { Upload, Loader2 } from "lucide-react";
+import { useUser } from "@clerk/react";
+import type { FileItem } from "@components/FileCard";
 
 interface FormUploadProps {
-  isUploading: boolean;
-  handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  roomId?: string;
+  apiUrl: string;
+  onFilesUploaded: (newFiles: FileItem[]) => void;
+  onRefreshNeeded: () => Promise<void>;
 }
 
-export default function FormUpload({ isUploading, handleSubmit }: FormUploadProps) {
+export default function FormUpload({
+  roomId,
+  apiUrl,
+  onFilesUploaded,
+  onRefreshNeeded,
+}: FormUploadProps) {
+  const [isUploading, setIsUploading] = useState(false);
+  const { user } = useUser();
+  const ownerFiles = `${user?.firstName ?? ""} ${user?.lastName ?? ""}`.trim();
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!roomId) return;
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    formData.append("roomId", roomId);
+    if (ownerFiles) {
+      formData.append("ownerFiles", ownerFiles);
+    }
+
+    try {
+      setIsUploading(true);
+      const res = await fetch(`${apiUrl}/sendFiles`, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) {
+        throw new Error("Error en la subida");
+      }
+
+      const message = await res.json();
+
+      if (message.files && Array.isArray(message.files)) {
+        onFilesUploaded(message.files);
+      }
+
+      await onRefreshNeeded();
+      form.reset();
+    } catch (err) {
+      console.error("Error al enviar archivos:", err);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   return (
     <form
       onSubmit={handleSubmit}
