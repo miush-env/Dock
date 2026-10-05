@@ -9,6 +9,20 @@ import {
 import { s3Client, PUBLIC_URL, resolveBucketName } from "../config/r2.js";
 import { isImageFile, formatFileSize } from "../utils/fileHelpers.js";
 
+function encodeMetadataValue(value) {
+  if (!value) return "";
+  return /[^\x20-\x7E]/.test(value) ? encodeURIComponent(value) : value;
+}
+
+function decodeMetadataValue(value) {
+  if (!value) return "";
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return value;
+  }
+}
+
 export async function fetchAllFiles() {
   const bucket = await resolveBucketName();
   const command = new ListObjectsV2Command({ Bucket: bucket });
@@ -44,11 +58,12 @@ export async function fetchFilesRoom(roomId) {
 
   const validItems = contents.filter((item) => item.Key && !item.Key.endsWith("/"));
 
-  // Obtener metadata de cada archivo (incluye el propietario guardado en R2)
+  // Obtener metadata de cada archivo (incluye el propietario y grupo guardados en R2)
   const files = await Promise.all(
     validItems.map(async (item) => {
       const fileName = item.Key.replace(`${roomId}/`, "");
       let owner = "Anónimo";
+      let group = "";
 
       try {
         const headCmd = new HeadObjectCommand({
@@ -56,8 +71,15 @@ export async function fetchFilesRoom(roomId) {
           Key: item.Key,
         });
         const headRes = await s3Client.send(headCmd);
-        if (headRes.Metadata && headRes.Metadata.owner) {
-          owner = headRes.Metadata.owner;
+        if (headRes.Metadata) {
+          if (headRes.Metadata.owner) {
+            owner = decodeMetadataValue(headRes.Metadata.owner);
+          }
+          if (headRes.Metadata.group) {
+            group = decodeMetadataValue(headRes.Metadata.group);
+          } else if (headRes.Metadata.category) {
+            group = decodeMetadataValue(headRes.Metadata.category);
+          }
         }
       } catch (err) {
         console.warn(`No se pudo leer metadata de ${item.Key}:`, err.message);
@@ -66,6 +88,8 @@ export async function fetchFilesRoom(roomId) {
       return {
         name: fileName,
         owner,
+        group,
+        category: group,
         fullPath: item.Key,
         url: `${PUBLIC_URL}/${encodeURIComponent(item.Key)}`,
         isImage: isImageFile(fileName),
@@ -80,15 +104,42 @@ export async function fetchFilesRoom(roomId) {
   return files;
 }
 
-export async function uploadFiles(files, customNamesInput, ownerFiles, roomId) {
+export async function uploadFiles(files, customNamesInput, ownerFiles, roomId, groupsInput) {
   const bucket = await resolveBucketName();
-  const rawNames = customNamesInput ? customNamesInput.split(",") : [];
+  
+  // Parsear nombres personalizados (array, JSON o lista separada por comas)
+  let rawNames = [];
+  if (Array.isArray(customNamesInput)) {
+    rawNames = customNamesInput;
+  } else if (typeof customNamesInput === "string") {
+    try {
+      const parsed = JSON.parse(customNamesInput);
+      rawNames = Array.isArray(parsed) ? parsed : customNamesInput.split(",");
+    } catch {
+      rawNames = customNamesInput.split(",");
+    }
+  }
+
+  // Parsear grupos / categorías (array, JSON o lista separada por comas)
+  let rawGroups = [];
+  if (Array.isArray(groupsInput)) {
+    rawGroups = groupsInput;
+  } else if (typeof groupsInput === "string") {
+    try {
+      const parsed = JSON.parse(groupsInput);
+      rawGroups = Array.isArray(parsed) ? parsed : groupsInput.split(",");
+    } catch {
+      rawGroups = groupsInput.split(",");
+    }
+  }
+
   const uploaded = [];
   const finalOwner = (ownerFiles && ownerFiles.trim()) || "Anónimo";
 
   for (let index = 0; index < files.length; index++) {
     const file = files[index];
-    const customName = rawNames[index] ? rawNames[index].trim() : "";
+    const customName = rawNames[index] ? String(rawNames[index]).trim() : "";
+    const customGroup = rawGroups[index] ? String(rawGroups[index]).trim() : "";
 
     const ext = path.extname(file.originalname);
     const originalBase = path.basename(file.originalname, ext);
@@ -96,9 +147,17 @@ export async function uploadFiles(files, customNamesInput, ownerFiles, roomId) {
     const finalFileName = `${finalBase}${ext}`;
     const key = `${roomId}/${finalFileName}`;
 
+    // Cloudflare R2 Metadata pública del objeto
+    const metadata = {
+      owner: encodeMetadataValue(finalOwner),
+    };
+    if (customGroup) {
+      metadata.group = encodeMetadataValue(customGroup);
+    }
+
     const putCommand = new PutObjectCommand({
       Bucket: bucket,
-      Metadata: { owner: finalOwner },
+      Metadata: metadata,
       Key: key,
       Body: file.buffer,
       ContentType: file.mimetype || "application/octet-stream",
@@ -108,6 +167,8 @@ export async function uploadFiles(files, customNamesInput, ownerFiles, roomId) {
 
     uploaded.push({
       owner: finalOwner,
+      group: customGroup,
+      category: customGroup,
       roomId: roomId,
       name: finalFileName,
       url: `${PUBLIC_URL}/${encodeURIComponent(key)}`,

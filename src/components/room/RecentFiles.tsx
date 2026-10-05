@@ -1,5 +1,6 @@
 import { FileCard, type FileItem } from "@components/FileCard";
 import { Clock } from "lucide-react";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 
 interface Props {
   recentFiles: Array<FileItem>;
@@ -29,18 +30,21 @@ export default function RecentFiles({
             </span>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4">
-            {recentFiles.map((file, index) => (
-              <FileCard
-                key={`recent-${file.name}-${index}`}
-                file={file}
-                badge="Reciente"
-                roomId={roomId}
-                onDeleted={onFileDeleted}
-                onRenamed={onFileRenamed}
-              />
-            ))}
-          </div>
+          <ScrollArea className="w-96 rounded-md whitespace-nowrap">
+            <div className="flex w-max gap-3 sm:gap-4 mb-5">
+              {recentFiles.map((file, index) => (
+                <FileCard
+                  key={`recent-${file.name}-${index}`}
+                  file={file}
+                  badge="Reciente"
+                  roomId={roomId}
+                  onDeleted={onFileDeleted}
+                  onRenamed={onFileRenamed}
+                />
+              ))}
+            </div>
+            <ScrollBar orientation="horizontal" className="bg-slate-100" colorthumb="bg-purple-500" />
+          </ScrollArea>
         </section>
       )}
     </div>

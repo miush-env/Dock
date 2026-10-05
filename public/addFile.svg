@@ -34,7 +34,7 @@
       <rect x="18" y="36" width="52" height="5" rx="2.5" fill="#E2E5EB" />
 
       <!-- Ícono "+" central -->
-      <path d="M56 68 V92 M44 80 H68" stroke="#8E95A2" stroke-width="2.5" stroke-linecap="round" />
+      <path d="M56 68 V92 M44 80 H68" stroke="#210B2C" stroke-width="2.5" stroke-linecap="round" />
     </g>
   </g>
 </svg>

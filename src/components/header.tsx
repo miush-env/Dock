@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { Package, Sun, Moon } from "lucide-react";
-import { useParams } from "react-router";
 import { Show, SignInButton, SignUpButton, UserButton } from "@clerk/react";
+import { useRoomId } from "@utils/WhatIsRoomId";
 
 export default function Header() {
   const [isDark, setIsDark] = useState(false);
-  const { roomId } = useParams<{ roomId: string }>();
+  const roomId = useRoomId();
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("dock-theme");

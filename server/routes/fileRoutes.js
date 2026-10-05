@@ -31,7 +31,7 @@ router.get("/:roomId", async (req, res) => {
   }
 });
 
-router.post("/sendFiles", upload.array("image", 10), async (req, res) => {
+router.post("/sendFiles", upload.array("image", 50), async (req, res) => {
   try {
     if (!req.files || req.files.length === 0) {
       return res.status(400).json({ error: "No se enviaron archivos" });
@@ -41,7 +41,8 @@ router.post("/sendFiles", upload.array("image", 10), async (req, res) => {
       req.files,
       req.body.fileName,
       req.body.ownerFiles,
-      req.body.roomId
+      req.body.roomId,
+      req.body.group || req.body.category
     );
     res.json({ message: "Files uploaded", files: uploaded });
   } catch (error) {
