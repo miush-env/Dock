@@ -11,7 +11,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@components/ui/dialog";
-import { Button } from "@components/ui/Button";
+import { Button } from "@components/ui/button";
 import { FilePlus, LoaderCircle } from "lucide-react";
 import FormUploaded from "@components/room/FormUploaded";
 import { useRoomId } from "@utils/WhatIsRoomId";
