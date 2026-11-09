@@ -1,0 +1,17 @@
+{
+  "name": "Dock",
+  "short_name": "Dock",
+  "description": "Comparte y gestiona tus archivos en tiempo real",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#090d16",
+  "theme_color": "#090d16",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

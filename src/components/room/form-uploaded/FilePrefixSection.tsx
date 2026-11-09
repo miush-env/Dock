@@ -103,7 +103,7 @@ export function FilePrefixSection({
           placeholder="Ej: DOC_, PROYECTO_..."
           value={prefix}
           onChange={(e) => onPrefixChange(e.target.value)}
-          className="h-12 text-base px-3.5 bg-slate-50/70 dark:bg-slate-900/60 border-2 border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-500 focus:bg-background focus:border-primary focus:ring-3 focus:ring-primary/25 transition-all shadow-xs"
+          className="h-9 sm:h-10 text-sm px-3 bg-slate-50/70 dark:bg-slate-900/60 border border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-500 focus:bg-background focus:border-primary focus:ring-2 focus:ring-primary/25 transition-all shadow-xs"
         />
       </div>
     </div>

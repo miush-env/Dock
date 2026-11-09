@@ -1,4 +1,4 @@
-import { useState, useEffect, TouchEvent } from "react";
+import { useState, useEffect, useCallback, TouchEvent } from "react";
 
 export function useCarousel(totalItems: number) {
   // virtualIndex 1 apunta al primer elemento real cuando hay clones para el scroll infinito
@@ -33,17 +33,48 @@ export function useCarousel(totalItems: number) {
     }
   }, [isTransitioning, virtualIndex]);
 
-  const handlePrev = () => {
+  const handlePrev = useCallback(() => {
     if (isTransitioning || totalItems <= 1) return;
     setIsTransitioning(true);
     setVirtualIndex((prev) => prev - 1);
-  };
+  }, [isTransitioning, totalItems]);
 
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     if (isTransitioning || totalItems <= 1) return;
     setIsTransitioning(true);
     setVirtualIndex((prev) => prev + 1);
-  };
+  }, [isTransitioning, totalItems]);
+
+  // Navegación con teclado (Flecha Izquierda / Derecha) cuando no esté enfocado en un campo de texto
+  useEffect(() => {
+    if (totalItems <= 1) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+
+      const target = e.target as HTMLElement | null;
+      const isTextInput =
+        target &&
+        (target.tagName === "INPUT" ||
+          target.tagName === "TEXTAREA" ||
+          target.isContentEditable);
+
+      if (isTextInput) return;
+
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        handlePrev();
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault();
+        handleNext();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [totalItems, handlePrev, handleNext]);
 
   const handleTransitionEnd = () => {
     setIsTransitioning(false);

@@ -104,10 +104,6 @@ function Room() {
                 <DialogTitle className="text-base sm:text-lg font-bold text-foreground">
                   Subir archivos
                 </DialogTitle>
-                <DialogDescription className="text-xs text-muted-foreground mt-0.5">
-                  Selecciona fotos, documentos o archivos para compartirlos en
-                  la sala
-                </DialogDescription>
               </DialogHeader>
               <FormUploaded
                 onFilesUploaded={handleFilesUploaded}

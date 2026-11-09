@@ -13,7 +13,9 @@
       "@components/*": ["./src/components/*"],
       "@components": ["./src/components"],
       "@utils/*": ["./src/utils/*"],
-      "@utils": ["./src/utils"]
+      "@utils": ["./src/utils"],
+      "@lib/*": ["./src/lib/*"],
+      "@lib": ["./src/lib"],
     },
 
     /* Bundler mode */

@@ -175,38 +175,38 @@ function FormUploaded({
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col gap-5 p-1 w-full max-w-full overflow-hidden box-border"
+      className="flex flex-col gap-4 p-1 w-full max-w-full overflow-hidden box-border "
     >
-      {/* Selector de archivos */}
-      <FileDropzone onFilesSelected={handleFilesSelected} />
-
-      {fileItems.length > 0 && currentItem && (
-        <div className="flex flex-col gap-4 w-full min-w-0">
-          {/* Carrusel de previsualización */}
-          <FileCarousel
-            slides={slides}
-            totalFiles={fileItems.length}
-            displayIndex={carousel.displayIndex}
-            currentTransformIndex={carousel.currentTransformIndex}
-            enableTransition={carousel.enableTransition}
-            onTransitionEnd={carousel.handleTransitionEnd}
-            onPrev={carousel.handlePrev}
-            onNext={carousel.handleNext}
-            onDeleteCurrent={handleDeleteCurrent}
-            touchHandlers={carousel.touchHandlers}
-          />
-
-          {/* Campos Nombre y Categoría con outline claro */}
-          <FileMetadataFields
-            name={currentItem.name}
-            category={currentItem.category}
-            onChange={handleFieldChange}
-          />
-        </div>
-      )}
+      <section className="flex flex-col gap-2">
+        {/* Selector de archivos */}
+        <FileDropzone onFilesSelected={handleFilesSelected} />
+        {fileItems.length > 0 && currentItem && (
+          <div className="flex flex-col gap-4 w-full min-w-0  lg:flex-row">
+            {/* Carrusel de previsualización */}
+            <FileCarousel
+              slides={slides}
+              totalFiles={fileItems.length}
+              displayIndex={carousel.displayIndex}
+              currentTransformIndex={carousel.currentTransformIndex}
+              enableTransition={carousel.enableTransition}
+              onTransitionEnd={carousel.handleTransitionEnd}
+              onPrev={carousel.handlePrev}
+              onNext={carousel.handleNext}
+              onDeleteCurrent={handleDeleteCurrent}
+              touchHandlers={carousel.touchHandlers}
+            />
+            {/* Campos Nombre y Categoría con outline claro */}
+            <FileMetadataFields
+              name={currentItem.name}
+              category={currentItem.category}
+              onChange={handleFieldChange}
+            />
+          </div>
+        )}
+      </section>
 
       {/* Sección de Prefijo (solo con >2 archivos) */}
-      {fileItems.length > 2 && (
+      {fileItems.length >= 2 && (
         <FilePrefixSection
           showPrefix={showPrefix}
           prefix={prefix}
@@ -225,14 +225,12 @@ function FormUploaded({
       <Button
         type="submit"
         disabled={fileItems.length === 0 || isUploading}
-        className="w-full h-11 text-sm font-semibold rounded-lg shadow-xs cursor-pointer transition-colors"
+        className="w-full h-11 text-sm font-semibold rounded-lg shadow-xs cursor-pointer transition-all active:scale-[0.99]"
       >
         {isUploading ? (
           <span className="flex items-center justify-center gap-2">
             <Loader2 className="size-4 animate-spin" />
-            <span>
-              Subiendo {fileItems.length} archivo{fileItems.length > 1 ? "s" : ""}...
-            </span>
+            <span>Subiendo ({fileItems.length})...</span>
           </span>
         ) : (
           <span>

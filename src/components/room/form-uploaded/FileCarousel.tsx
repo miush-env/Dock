@@ -38,7 +38,7 @@ export function FileCarousel({
 }: FileCarouselProps) {
   return (
     <div
-      className="relative w-full h-64 sm:h-72 min-h-0 overflow-hidden rounded-2xl border border-border bg-slate-950 flex items-center justify-center select-none touch-pan-y shadow-md"
+      className="relative w-full h-30 sm:h-72 min-h-0 overflow-hidden rounded-2xl border border-border bg-slate-950 flex items-center justify-center select-none touch-pan-y shadow-md"
       onTouchStart={touchHandlers.onTouchStart}
       onTouchMove={touchHandlers.onTouchMove}
       onTouchEnd={touchHandlers.onTouchEnd}
@@ -47,7 +47,7 @@ export function FileCarousel({
       <button
         type="button"
         onClick={onDeleteCurrent}
-        className="absolute top-3 right-3 size-9 flex items-center justify-center rounded-full bg-destructive/90 hover:bg-destructive text-white shadow-lg backdrop-blur-sm active:scale-95 transition-all z-20 cursor-pointer"
+        className="absolute top-3 right-3 size-7 flex items-center justify-center rounded-full bg-destructive/90 hover:bg-destructive text-white shadow-lg backdrop-blur-sm active:scale-95 transition-all z-20 cursor-pointer"
         aria-label="Eliminar archivo actual"
         title="Eliminar archivo actual"
       >
@@ -81,7 +81,7 @@ export function FileCarousel({
             ) : (
               /* Miniatura personalizada para archivos no imagen (zip, rar, exe, apk, etc.) */
               <div className="flex flex-col items-center justify-center gap-2.5 p-4 text-center select-none max-w-xs min-w-0">
-                <div className="size-20 sm:size-24 rounded-2xl bg-neutral-900 border border-neutral-800 flex items-center justify-center shadow-lg">
+                <div className="size-10 sm:size-24 rounded-2xl bg-neutral-900 border border-neutral-800 flex items-center justify-center shadow-lg">
                   {renderExtensionVisual(item.extension)}
                 </div>
 
@@ -89,9 +89,6 @@ export function FileCarousel({
                   <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-primary/20 text-primary border border-primary/30">
                     .{item.extension || "ARCHIVO"}
                   </span>
-                  <p className="text-xs font-semibold text-neutral-200 truncate w-full px-2">
-                    {item.file.name}
-                  </p>
                   <span className="text-[11px] text-neutral-400 font-medium">
                     {(item.file.size / (1024 * 1024)).toFixed(2)} MB
                   </span>
@@ -108,19 +105,19 @@ export function FileCarousel({
           <button
             type="button"
             onClick={onPrev}
-            className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 size-10 sm:size-11 flex items-center justify-center rounded-full bg-white text-slate-900 shadow-xl border border-slate-200 hover:bg-slate-100 active:scale-95 transition-all z-20 cursor-pointer"
+            className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 size-7 sm:size-8 flex items-center justify-center rounded-full bg-white text-slate-900 shadow-xl border border-slate-200 hover:bg-slate-100 active:scale-95 transition-all z-20 cursor-pointer"
             aria-label="Archivo anterior"
           >
-            <ChevronLeft className="size-6 sm:size-7 stroke-[2.5]" />
+            <ChevronLeft className="size-6 sm:size-6 stroke-[2.5]" />
           </button>
 
           <button
             type="button"
             onClick={onNext}
-            className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 size-10 sm:size-11 flex items-center justify-center rounded-full bg-white text-slate-900 shadow-xl border border-slate-200 hover:bg-slate-100 active:scale-95 transition-all z-20 cursor-pointer"
+            className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 size-7 sm:size-8 flex items-center justify-center rounded-full bg-white text-slate-900 shadow-xl border border-slate-200 hover:bg-slate-100 active:scale-95 transition-all z-20 cursor-pointer"
             aria-label="Siguiente archivo"
           >
-            <ChevronRight className="size-6 sm:size-7 stroke-[2.5]" />
+            <ChevronRight className="size-6 sm:size-6 stroke-[2.5]" />
           </button>
         </>
       )}

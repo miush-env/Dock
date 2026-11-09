@@ -6,6 +6,7 @@ import { ClerkProvider } from '@clerk/react'
 import './index.css'
 import App from './App.tsx'
 import Room from './Room.tsx'
+import Login from './components/Login.tsx'
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
 
@@ -19,6 +20,7 @@ createRoot(document.getElementById('root')!).render(
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<App />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/room/:roomId" element={<Room />} />
         </Routes>
       </BrowserRouter>

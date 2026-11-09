@@ -93,7 +93,7 @@ export function FileCard({
               className="text-xs font-semibold text-slate-900 dark:text-slate-100 truncate"
               title={file.name}
             >
-              {file.name}
+              {file.group}
             </p>
             <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 mt-1">
               <span className="truncate max-w-[100px]">
@@ -137,7 +137,7 @@ export function FileCard({
           </div>
         </div>
       </div>
-
+    
       {/* MODAL 1: DETALLES */}
       <FileDetailsModal
         file={file}
